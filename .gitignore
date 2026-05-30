@@ -1,0 +1,41 @@
+# === .NET / Visual Studio ===
+bin/
+obj/
+.vs/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+# Local SQLite Database files
+backend/TinyUrl.Api/tinyurl.db
+backend/TinyUrl.Api/tinyurl.db-journal
+backend/TinyUrl.Api/tinyurl.db-wal
+backend/TinyUrl.Api/logs/
+functions/TinyUrl.CleanupFunction/bin/
+functions/TinyUrl.CleanupFunction/obj/
+
+# === Node / Angular ===
+node_modules/
+dist/
+.angular/
+.npm/
+.eslintcache
+frontend/dist/
+frontend/.angular/
+frontend/node_modules/
+
+# === Terraform ===
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+.terraform.lock.hcl
+
+# === Operating System ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
