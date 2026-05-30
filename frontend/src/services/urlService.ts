@@ -8,7 +8,9 @@ import type { ShortUrl, ShortenUrlRequest } from '../types';
 //
 // Note: BASE_URL represents your running C# backend Web API root address.
 // =========================================================================
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:44386';
+const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'https://localhost:44386'
+  : 'https://ak-tinyurl-api.onrender.com';
 
 export const urlService = {
   // Fetch all public URLs (optionally filtered by search query parameter)
