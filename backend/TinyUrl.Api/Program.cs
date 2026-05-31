@@ -16,19 +16,31 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     // 1. Setup Serilog rolling file logging
-    string logDirectory = Path.Combine(builder.Environment.ContentRootPath, "logs");
-    if (!Directory.Exists(logDirectory))
-    {
-        Directory.CreateDirectory(logDirectory);
-    }
-    string logPath = Path.Combine(logDirectory, "tinyurl_log-.txt");
-
     Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Information()
         .WriteTo.Console()
-        .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, outputTemplate: 
-            "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
         .CreateLogger();
+
+    try
+    {
+        string logDirectory = Path.Combine(builder.Environment.ContentRootPath, "logs");
+        if (!Directory.Exists(logDirectory))
+        {
+            Directory.CreateDirectory(logDirectory);
+        }
+        string logPath = Path.Combine(logDirectory, "tinyurl_log-.txt");
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, outputTemplate: 
+                "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .CreateLogger();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Warning: Failed to initialize file logger due to restricted write permissions: " + ex.Message);
+    }
 
     builder.Host.UseSerilog();
     Log.Information("Starting TinyURL MVC Controller Web API Service...");
