@@ -10,7 +10,7 @@ import type { ShortUrl, ShortenUrlRequest } from '../types';
 // =========================================================================
 const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'https://localhost:44386'
-  : 'https://ak-tinyurl-api.onrender.com';
+  : 'https://ashok-tinyurl.runasp.net';
 
 export const urlService = {
   // Fetch all public URLs (optionally filtered by search query parameter)
