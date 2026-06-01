@@ -98,8 +98,33 @@ export default function App() {
     }
 
     try {
-      // Basic client-side URL validation check
-      new URL(urlToSubmit);
+      // 1. Basic URL syntax check
+      const parsedUrl = new URL(urlToSubmit);
+
+      // 2. Full Extension Check (e.g. google.com has .com, google.co.in has .in)
+      const domainParts = parsedUrl.hostname.split('.');
+      const tld = domainParts[domainParts.length - 1];
+      
+      if (parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
+        if (domainParts.length < 2 || tld.length < 2) {
+          showErrorBanner("Please enter a valid website domain name with an extension (e.g. .com, .org).");
+          return;
+        }
+      }
+
+      // 3. Loop Prevention: Prevent shortening links pointing back to your shortener
+      const currentHost = window.location.hostname;
+      const backendHost = "ashok-tinyurl.runasp.net";
+
+      if (
+        parsedUrl.hostname === currentHost || 
+        parsedUrl.hostname === backendHost || 
+        parsedUrl.hostname === "localhost" || 
+        parsedUrl.hostname === "127.0.0.1"
+      ) {
+        showErrorBanner("Loop prevention: You cannot shorten links pointing to this shortener service.");
+        return;
+      }
     } catch (_) {
       showErrorBanner('Please enter a valid absolute URL (e.g. https://google.com).');
       return;
