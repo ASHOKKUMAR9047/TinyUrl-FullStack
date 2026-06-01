@@ -245,7 +245,7 @@ export default function App() {
       <header className="dashboard-header animate-fade-in">
         <div className="logo-container">
           <span className="logo-text">
-            TINY<span className="logo-dot">.</span>URL
+            Tiny<span className="logo-dot">URL</span>
           </span>
         </div>
         <p className="subtitle">
