@@ -104,14 +104,14 @@ namespace TinyUrl.Api.Controllers
                         var getResponse = await httpClient.GetAsync(request.OriginalURL);
                         if (!getResponse.IsSuccessStatusCode)
                         {
-                            return BadRequest(new { error = $"The website address you entered is invalid or returned a {(int)getResponse.StatusCode} (Not Found) error." });
+                            return BadRequest(new { error = "Invalid URL. Please check the URL." });
                         }
                     }
                 }
             }
             catch (Exception)
             {
-                return BadRequest(new { error = "Website check failed: The destination website address is offline or unreachable." });
+                return BadRequest(new { error = "Invalid URL. Please check the URL." });
             }
 
             try
