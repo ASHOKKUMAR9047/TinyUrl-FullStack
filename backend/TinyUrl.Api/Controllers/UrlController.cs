@@ -108,7 +108,7 @@ namespace TinyUrl.Api.Controllers
 
         // GET: /{code} (Mapped at the root directory to match live routing)
         // Redirects short code path to original destination and increments redirect click statistics
-        [HttpGet("/{code:regex(^[a-zA-Z0-9]{{6}}$)}")]
+        [HttpGet("/{code:regex(^[[a-zA-Z0-9]]{{6}}$)}")]
         public async Task<IActionResult> RedirectToOriginal(string code)
         {
             if (string.IsNullOrWhiteSpace(code) || code.Length != 6)
