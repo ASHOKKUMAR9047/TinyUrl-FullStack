@@ -44,7 +44,8 @@ namespace TinyUrl.Api.Controllers
             {
                 var lowerSearch = search.ToLower();
                 query = query.Where(u => u.OriginalURL.ToLower().Contains(lowerSearch) || 
-                                         u.Code.ToLower().Contains(lowerSearch));
+                                         u.Code.ToLower().Contains(lowerSearch) ||
+                                         u.ShortURL.ToLower().Contains(lowerSearch));
             }
 
             var urls = await query

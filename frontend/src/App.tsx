@@ -161,7 +161,8 @@ export default function App() {
       const filtered = currentUrls.filter(
         (u) =>
           u.originalURL.toLowerCase().includes(q) ||
-          u.code.toLowerCase().includes(q)
+          u.code.toLowerCase().includes(q) ||
+          u.shortURL.toLowerCase().includes(q)
       );
       setFilteredUrls(filtered);
     }
