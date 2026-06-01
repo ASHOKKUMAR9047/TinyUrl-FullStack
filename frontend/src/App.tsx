@@ -104,7 +104,7 @@ export default function App() {
       // 2. Full Extension Check (e.g. google.com has .com, google.co.in has .in)
       const domainParts = parsedUrl.hostname.split('.');
       const tld = domainParts[domainParts.length - 1];
-      
+
       if (parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
         if (domainParts.length < 2 || tld.length < 2) {
           showErrorBanner("Please enter a valid website domain name with an extension (e.g. .com, .org).");
@@ -115,12 +115,12 @@ export default function App() {
       // 3. Loop Prevention: Only block URLs that are self-redirect codes (e.g. domain/xxxxxx)
       const currentHost = window.location.hostname;
       const backendHost = "ashok-tinyurl.runasp.net";
-      
-      const isShortenerHost = parsedUrl.hostname === currentHost || 
-                              parsedUrl.hostname === backendHost || 
-                              parsedUrl.hostname === "localhost" || 
-                              parsedUrl.hostname === "127.0.0.1";
-      
+
+      const isShortenerHost = parsedUrl.hostname === currentHost ||
+        parsedUrl.hostname === backendHost ||
+        parsedUrl.hostname === "localhost" ||
+        parsedUrl.hostname === "127.0.0.1";
+
       // Get the path and remove leading/trailing slashes (e.g. "/abc123" -> "abc123")
       const pathCode = parsedUrl.pathname.replace(/^\/|\/$/g, '');
       const isShortCodePath = /^[a-zA-Z0-9]{6}$/.test(pathCode);
@@ -149,7 +149,7 @@ export default function App() {
         // Public link created, prepend to top of list
         const updated = [newUrl, ...urls];
         setUrls(updated);
-        
+
         // Refresh filter logic directly
         applyFilter(searchQuery, updated);
         triggerToast('Short URL created successfully!');
@@ -245,7 +245,7 @@ export default function App() {
       <header className="dashboard-header animate-fade-in">
         <div className="logo-container">
           <span className="logo-text">
-            Tiny<span className="logo-dot">URL</span>
+            TINY<span className="logo-dot"></span>URL
           </span>
         </div>
         <p className="subtitle">
