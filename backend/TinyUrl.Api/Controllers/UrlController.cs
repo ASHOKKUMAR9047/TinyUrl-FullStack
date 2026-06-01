@@ -72,6 +72,48 @@ namespace TinyUrl.Api.Controllers
                 return BadRequest(new { error = "A valid absolute HTTP/HTTPS URL is required." });
             }
 
+            // 1. Smart Loop Prevention (Only block actual redirect code loops like shortener-domain/xxxxxx)
+            string currentHost = Request.Host.Host;
+            bool isShortenerHost = validatedUri.Host.Equals(currentHost, StringComparison.OrdinalIgnoreCase) || 
+                                   validatedUri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) ||
+                                   validatedUri.Host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase);
+
+            string path = validatedUri.AbsolutePath.Trim('/');
+            bool isShortCodePath = System.Text.RegularExpressions.Regex.IsMatch(path, "^[a-zA-Z0-9]{6}$");
+
+            if (isShortenerHost && isShortCodePath)
+            {
+                return BadRequest(new { error = "Loop prevention: You cannot shorten an existing short redirection link." });
+            }
+
+            // 2. Active Website Verification (Check if the page exists and returns a successful response)
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.Timeout = TimeSpan.FromSeconds(5); // 5-second timeout
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)");
+
+                    // Try a fast HEAD request first
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Head, request.OriginalURL);
+                    var response = await httpClient.SendAsync(requestMessage);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Fallback to GET in case the target server blocks HEAD requests
+                        var getResponse = await httpClient.GetAsync(request.OriginalURL);
+                        if (!getResponse.IsSuccessStatusCode)
+                        {
+                            return BadRequest(new { error = $"The website address you entered is invalid or returned a {(int)getResponse.StatusCode} (Not Found) error." });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { error = "Website check failed: The destination website address is offline or unreachable." });
+            }
+
             try
             {
                 // Generate a unique 6-character alphanumeric short code

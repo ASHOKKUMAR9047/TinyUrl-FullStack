@@ -112,17 +112,21 @@ export default function App() {
         }
       }
 
-      // 3. Loop Prevention: Prevent shortening links pointing back to your shortener
+      // 3. Loop Prevention: Only block URLs that are self-redirect codes (e.g. domain/xxxxxx)
       const currentHost = window.location.hostname;
       const backendHost = "ashok-tinyurl.runasp.net";
+      
+      const isShortenerHost = parsedUrl.hostname === currentHost || 
+                              parsedUrl.hostname === backendHost || 
+                              parsedUrl.hostname === "localhost" || 
+                              parsedUrl.hostname === "127.0.0.1";
+      
+      // Get the path and remove leading/trailing slashes (e.g. "/abc123" -> "abc123")
+      const pathCode = parsedUrl.pathname.replace(/^\/|\/$/g, '');
+      const isShortCodePath = /^[a-zA-Z0-9]{6}$/.test(pathCode);
 
-      if (
-        parsedUrl.hostname === currentHost || 
-        parsedUrl.hostname === backendHost || 
-        parsedUrl.hostname === "localhost" || 
-        parsedUrl.hostname === "127.0.0.1"
-      ) {
-        showErrorBanner("Loop prevention: You cannot shorten links pointing to this shortener service.");
+      if (isShortenerHost && isShortCodePath) {
+        showErrorBanner("Loop prevention: You cannot shorten an existing short redirection link.");
         return;
       }
     } catch (_) {
